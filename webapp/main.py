@@ -7,6 +7,7 @@ app = FastAPI()
 
 # app.mount("/static", StaticFiles(directory="webapp/static"), name="static")
 
+
 class ConnectionManager:
 
     def __init__(self):
@@ -49,10 +50,11 @@ class ConnectionManager:
             for connection in self.active_connections:
                 await connection.send_text(message)
 
+
 manager = ConnectionManager()
 
-@app.websocket("/ws/{username}")
 
+@app.websocket("/ws/{username}")
 async def websocket_endpoint(websocket: WebSocket, username: str):
     """
     Create a webSocket endpoint to handle client connections and messaging.

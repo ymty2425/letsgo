@@ -1,10 +1,9 @@
-def reverse_list(l:list):
-
+def reverse_list(l: list):
     """
-   
+
     Reverse a list without using any built-in functions.
 
-    The function takes a list as input and returns a new list 
+    The function takes a list as input and returns a new list
     that is the reverse of the input list.
 
     Parameters:
@@ -12,9 +11,9 @@ def reverse_list(l:list):
 
     Returns:
     list: The reversed list.
-    
+
     """
-    
+
     start = 0
     end = len(l) - 1
 
@@ -29,13 +28,12 @@ def reverse_list(l:list):
 
 
 def solve_sudoku(matrix):
-
     """
-    
+
     Solve a 9x9 Sudoku board using the backtracking algorithm.
 
     The function modifies the input 9x9 matrix in-place to solve the Sudoku puzzle.
-    It ensures that each row, column, and 3x3 subgrid contains all of the digits 
+    It ensures that each row, column, and 3x3 subgrid contains all of the digits
     from 1 to 9 without repetition.
 
     Parameters:
@@ -44,13 +42,12 @@ def solve_sudoku(matrix):
 
     Returns:
     list of list of int: The solved Sudoku board.
-    
+
     """
 
     def valid_move(row, col, num):
-        
         """
-        
+
         Check if placing a number at a specific position is valid according to Sudoku rules.
 
         Parameters:
@@ -60,7 +57,7 @@ def solve_sudoku(matrix):
 
         Returns:
         bool: True if the move is valid, False otherwise.
-        
+
         """
 
         # Check if the number is not present in the current row
@@ -73,9 +70,8 @@ def solve_sudoku(matrix):
             if matrix[3 * (row // 3) + i // 3][3 * (col // 3) + i % 3] == num:
                 return False
         return True
-    
+
     def backtrack():
-        
         """
 
         Backtracking function to solve the Sudoku board by trying all possible numbers
@@ -83,7 +79,7 @@ def solve_sudoku(matrix):
 
         Returns:
         bool: True if the board is solved, False otherwise.
-        
+
         """
 
         for i in range(9):
@@ -99,17 +95,18 @@ def solve_sudoku(matrix):
                             matrix[i][j] = 0
                     return False
         return True
-    
+
     if backtrack():
         return matrix
     else:
         return None
 
+
 def main():
     # Test reverse_list function
     test_list = [1, 2, 2, 3, 4, 4, 12]
     print("Original list:", test_list)
-    
+
     reversed_list = reverse_list(test_list)
     print("Reversed list:", reversed_list)  # Output should be [12, 4, 4, 3, 2, 2, 1]
 
@@ -122,7 +119,7 @@ def main():
         [7, 0, 0, 0, 2, 0, 0, 0, 6],
         [0, 6, 0, 0, 0, 0, 2, 8, 0],
         [0, 0, 0, 4, 1, 9, 0, 0, 5],
-        [0, 0, 0, 0, 8, 0, 0, 7, 9]
+        [0, 0, 0, 0, 8, 0, 0, 7, 9],
     ]
 
     print("\nOriginal Sudoku board:")
@@ -130,13 +127,14 @@ def main():
         print(row)
 
     solved_sudoku = solve_sudoku(sudoku_board)
-    
+
     if solved_sudoku:
         print("\nSolved Sudoku board:")
         for row in solved_sudoku:
             print(row)
     else:
         print("Invalid Sudoku")
+
 
 if __name__ == "__main__":
     main()
