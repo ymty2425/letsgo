@@ -5,7 +5,7 @@ import asyncio
 
 app = FastAPI()
 
-app.mount("/static", StaticFiles(directory="webapp/static"), name="static")
+# app.mount("/static", StaticFiles(directory="webapp/static"), name="static")
 
 class ConnectionManager:
 
@@ -22,19 +22,21 @@ class ConnectionManager:
         websocket (WebSocket): The WebSocket connection to add.
         username (str): The username of the connecting client.
         """
-        await websocket.accept()
-        self.active_connections.append(websocket)
-        self.usernames[websocket] = username
+        async with self.lock:
+            await websocket.accept()
+            self.active_connections.append(websocket)
+            self.usernames[websocket] = username
 
-    def disconnect(self, websocket: WebSocket):
+    async def disconnect(self, websocket: WebSocket):
         """
         Remove a WebSocket connection from the active connections list.
 
         Args:
         websocket (WebSocket): The WebSocket connection to remove.
         """
-        self.active_connections.remove(websocket)
-        del self.usernames[websocket]
+        async with self.lock:
+            self.active_connections.remove(websocket)
+            del self.usernames[websocket]
 
     async def broadcast(self, message: str):
         """
@@ -43,14 +45,11 @@ class ConnectionManager:
         Args:
         message (str): The message to broadcast.
         """
-        for connection in self.active_connections:
-            await connection.send_text(message)
+        async with self.lock:
+            for connection in self.active_connections:
+                await connection.send_text(message)
 
 manager = ConnectionManager()
-
-@app.get("/")
-async def read_root():
-    return {"message": "Welcome to the FastAPI chat application"}
 
 @app.websocket("/ws/{username}")
 
@@ -71,4 +70,10 @@ async def websocket_endpoint(websocket: WebSocket, username: str):
     except WebSocketDisconnect:
         await manager.disconnect(websocket)
         message = f"{username} has left the chat"
+        await manager.broadcast(message)
+    except Exception as e:
+        # Handle any other exceptions gracefully
+        print(f"Error: {e}")
+        await manager.disconnect(websocket)
+        message = f"{username} has left the chat due to an error"
         await manager.broadcast(message)
