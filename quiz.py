@@ -85,7 +85,7 @@ def solve_sudoku(matrix):
         bool: True if the board is solved, False otherwise.
         
         """
-        
+
         for i in range(9):
             for j in range(9):
                 # Find the empty cell
@@ -100,8 +100,10 @@ def solve_sudoku(matrix):
                     return False
         return True
     
-    backtrack()
-    return matrix
+    if backtrack():
+        return matrix
+    else:
+        return None
 
 def main():
     # Test reverse_list function
@@ -112,7 +114,7 @@ def main():
     print("Reversed list:", reversed_list)  # Output should be [12, 4, 4, 3, 2, 2, 1]
 
     sudoku_board = [
-        [5, 3, 0, 0, 7, 0, 0, 0, 0],
+        [5, 3, 0, 0, 7, 0, 1, 0, 0],
         [6, 0, 0, 1, 9, 5, 0, 0, 0],
         [0, 9, 8, 0, 0, 0, 0, 6, 0],
         [8, 0, 0, 0, 6, 0, 0, 0, 3],
@@ -129,9 +131,12 @@ def main():
 
     solved_sudoku = solve_sudoku(sudoku_board)
     
-    print("\nSolved Sudoku board:")
-    for row in solved_sudoku:
-        print(row)
+    if solved_sudoku:
+        print("\nSolved Sudoku board:")
+        for row in solved_sudoku:
+            print(row)
+    else:
+        print("Invalid Sudoku")
 
 if __name__ == "__main__":
     main()
